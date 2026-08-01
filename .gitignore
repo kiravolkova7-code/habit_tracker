@@ -13,7 +13,7 @@ __pycache__/
 #main.py
 poetry.lock
 pyproject.toml
-__init__.py
+# __init__.py
 build/
 develop-eggs/
 dist/

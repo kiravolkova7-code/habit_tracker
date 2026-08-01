@@ -1,10 +1,10 @@
 import logging
 import os
 from django.utils import timezone
-from telegram import Bot
 from telegram.error import TelegramError
 from dotenv import load_dotenv
 from celery import shared_task
+from asgiref.sync import sync_to_async
 
 from users.models import User
 from .models import Habit
@@ -12,6 +12,17 @@ from .models import Habit
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+
+
+async def _send(bot_token: str, chat_id: str, text: str) -> None:
+    """
+    Асинхронная отправка сообщения через Telegram API.
+    Объект Bot создается внутри функции, чтобы избежать проблем с переиспользованием состояния.
+    """
+    from telegram import Bot
+
+    bot = Bot(token=bot_token)
+    await bot.send_message(chat_id=chat_id, text=text)
 
 
 @shared_task
@@ -44,13 +55,14 @@ def send_bulk_habit_reminders():
         logger.info("No habits to remind today.")
         return
 
-    bot = Bot(token=bot_token)
+    async_send = sync_to_async(_send, thread_sensitive=False)
 
     for habit in reminders_to_send:
         try:
-            message_text = f"🔔 Напоминание!\n\n" f"{habit.get_full_description()}.\n\n" f"Пора выполнить задачу."
+            message_text = f" Напоминание!\n\n" f"{habit.get_full_description()}.\n\n" f"Пора выполнить задачу."
 
-            bot.send_message(chat_id=habit.user.telegram_chat_id, text=message_text)
+            async_send(str(bot_token), str(habit.user.telegram_chat_id), message_text)
+
             logger.info(f"Sent reminder for habit {habit.id} to user {habit.user_id}")
 
         except TelegramError as e:
