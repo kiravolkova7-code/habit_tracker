@@ -7,10 +7,9 @@ from .views import HabitViewSet, PublicHabitListView
 app_name = HabitsConfig.name
 
 router = DefaultRouter()
-router.register(r'habits', HabitViewSet, basename='habit')
+router.register(r"habits", HabitViewSet, basename="habit")
 
 urlpatterns = [
-    path('public/', PublicHabitListView.as_view(), name='public-habits'),
-    path('', include(router.urls)),
-
+    path("public/", PublicHabitListView.as_view(), name="public-habits"),
+    path("", include(router.urls)),
 ]

@@ -7,7 +7,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'phone', 'city')
+        fields = ("email", "password", "phone", "city")
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -16,10 +16,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            email=validated_data['email'],
-            password=validated_data['password'],
-            phone=validated_data.get('phone'),
-            city=validated_data.get('city')
+            email=validated_data["email"],
+            password=validated_data["password"],
+            phone=validated_data.get("phone"),
+            city=validated_data.get("city"),
         )
         return user
 
@@ -27,5 +27,5 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'phone', 'city', 'avatar')
-        read_only_fields = ('id', 'email')
+        fields = ("id", "email", "phone", "city", "avatar")
+        read_only_fields = ("id", "email")

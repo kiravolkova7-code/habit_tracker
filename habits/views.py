@@ -15,9 +15,9 @@ class HabitViewSet(viewsets.ModelViewSet):
     pagination_class = HabitPagination
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             permission_classes = [CanCreateHabit]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+        elif self.action in ["retrieve", "update", "partial_update", "destroy"]:
             permission_classes = [IsHabitOwner]
         else:
             permission_classes = [CanCreateHabit]
@@ -33,8 +33,6 @@ class HabitViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         """
         GET /habits/
-        Возвращает ТОЛЬКО привычки текущего авторизованного пользователя
-        (и полезные, и приятные). Публичные чужие привычки здесь не отображаются.
         """
         user_habits = Habit.objects.filter(user=request.user)
 
@@ -70,8 +68,8 @@ class HabitViewSet(viewsets.ModelViewSet):
 class PublicHabitListView(ListAPIView):
     """
     Отдельное представление ТОЛЬКО для публичных привычек.
-    Работает без IsAuthenticated благодаря AllowAny.
     """
+
     queryset = Habit.objects.filter(is_public=True)
     serializer_class = HabitSerializer
     permission_classes = [AllowAny]

@@ -9,60 +9,49 @@ class HabitAdmin(admin.ModelAdmin):
     """
 
     list_display = (
-        'id',
-        'get_full_description',
-        'user',
-        'is_public',
-        'is_pleasant',
-        'periodicity_days',
-        'estimated_duration_seconds',
-        'created_at'
+        "id",
+        "get_full_description",
+        "user",
+        "is_public",
+        "is_pleasant",
+        "periodicity_days",
+        "estimated_duration_seconds",
+        "created_at",
     )
 
-    list_filter = (
-        'is_public',
-        'is_pleasant',
-        'user',
-        'periodicity_days',
-        'created_at'
-    )
+    list_filter = ("is_public", "is_pleasant", "user", "periodicity_days", "created_at")
 
     search_fields = (
-        'action',
-        'location',
-        'time',
+        "action",
+        "location",
+        "time",
     )
 
-    readonly_fields = ('user', 'created_at', 'updated_at')
+    readonly_fields = ("user", "created_at", "updated_at")
 
-    raw_id_fields = ('pleasant_habit',)
+    raw_id_fields = ("pleasant_habit",)
 
     autocomplete_fields = ()
 
-    ordering = ('-created_at', '-updated_at')
+    ordering = ("-created_at", "-updated_at")
 
     fieldsets = (
-        (None, {
-            'fields': ('user', 'action', 'location', 'time')
-        }),
-        ('Параметры выполнения', {
-            'fields': ('estimated_duration_seconds', 'periodicity_days')
-        }),
-        ('Связи и вознаграждения', {
-            'fields': ('reward_description', 'is_pleasant', 'pleasant_habit')
-        }),
-        ('Публичность', {
-            'fields': ('is_public',)
-        }),
-        ('Служебные данные', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',),
-        }),
+        (None, {"fields": ("user", "action", "location", "time")}),
+        ("Параметры выполнения", {"fields": ("estimated_duration_seconds", "periodicity_days")}),
+        ("Связи и вознаграждения", {"fields": ("reward_description", "is_pleasant", "pleasant_habit")}),
+        ("Публичность", {"fields": ("is_public",)}),
+        (
+            "Служебные данные",
+            {
+                "fields": ("created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
     )
 
     def get_queryset(self, request):
         """
-        В целях безопасности администратор видит только свои привычки
+        Администратор видит только свои привычки
         и публичные привычки других пользователей.
         """
         qs = super().get_queryset(request)

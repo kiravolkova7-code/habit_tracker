@@ -1,5 +1,5 @@
 from users import permissions
-from .models import  User
+from .models import User
 from .serializers import UserSerializer, RegisterSerializer
 from rest_framework import generics, permissions, viewsets, status
 from rest_framework.response import Response
@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 class RegisterView(generics.CreateAPIView):
     """Регистрация нового пользователя с проверкой дубликатов."""
+
     queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = RegisterSerializer
@@ -15,13 +16,11 @@ class RegisterView(generics.CreateAPIView):
         try:
             return super().create(request, *args, **kwargs)
         except Exception as e:
-            if 'email' in str(e).lower():
+            if "email" in str(e).lower():
                 return Response(
-                    {'error': 'Пользователь с таким Email уже существует.'},
-                    status=status.HTTP_400_BAD_REQUEST
+                    {"error": "Пользователь с таким Email уже существует."}, status=status.HTTP_400_BAD_REQUEST
                 )
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -35,8 +34,8 @@ class UserViewSet(viewsets.ModelViewSet):
         return User.objects.filter(pk=self.request.user.pk)
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'update', 'partial_update']:
+        if self.action in ["list", "retrieve", "update", "partial_update"]:
             return [permissions.IsAuthenticated()]
-        if self.action == 'destroy':
+        if self.action == "destroy":
             return [permissions.IsAdminUser()]
         return super().get_permissions()
