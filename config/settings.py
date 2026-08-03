@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 
 INSTALLED_APPS = [
@@ -89,10 +89,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.getenv('CELERY_BROKER_URL') + '/1',
-        'OPTIONS': {'CLIENT_CLASS': 'django_redis.client.DefaultClient'},
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("CELERY_BROKER_URL") + "/1",
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
     }
 }
 
@@ -108,14 +108,14 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
 ]
 
-STATIC_URL = '/static/'
-STATIC_ROOT = '/vol/web/static/'
+STATIC_URL = "/static/"
+STATIC_ROOT = "/vol/web/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = '/vol/web/media/'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/vol/web/media/"
 
 AUTH_USER_MODEL = "users.User"
 

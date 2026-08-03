@@ -1,4 +1,3 @@
-from users import permissions
 from .models import User
 from .serializers import UserSerializer, RegisterSerializer
 from rest_framework import generics, permissions, viewsets, status
