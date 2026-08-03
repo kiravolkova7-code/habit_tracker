@@ -9,7 +9,9 @@ on:
 jobs:
   test-and-lint:
     runs-on: ubuntu-latest
-
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
