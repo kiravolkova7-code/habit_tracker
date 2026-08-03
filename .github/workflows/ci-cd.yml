@@ -69,7 +69,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: deployer
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
           script: |
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             cd /home/deployer/habit_tracker
