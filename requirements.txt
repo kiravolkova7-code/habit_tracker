@@ -16,6 +16,7 @@ coverage==7.15.2
 cron-descriptor==1.4.5
 Django==6.0.7
 django-celery-beat==2.9.0
+django-redis==5.4.0
 django-cors-headers==4.9.0
 django-timezone-field==7.2.2
 djangorestframework==3.17.1
@@ -23,6 +24,7 @@ djangorestframework_simplejwt==5.5.1
 drf-yasg==1.21.15
 executing==2.2.1
 flake8==7.3.0
+gunicorn==26.0.0
 h11==0.16.0
 httpcore==1.0.9
 httpx==0.28.1
