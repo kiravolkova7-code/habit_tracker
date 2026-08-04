@@ -1,4 +1,4 @@
-FROM python:3.14-slim
+FROM python:3.13-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -12,9 +12,6 @@ COPY requirements.txt .
 RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-# Для production-сборки можно собрать статику здесь, но лучше делать это на этапе Nginx
-# RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 

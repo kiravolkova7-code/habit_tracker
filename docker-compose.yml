@@ -24,7 +24,7 @@ services:
       - "6379:6379"
 
   web:
-    build: .
+    image: ${IMAGE_TAG:-${DOCKERHUB_USERNAME:-kiravolkova7}/habit_tracker:latest}
     command: >
       sh -c "python manage.py migrate --noinput &&
              python manage.py collectstatic --noinput &&
@@ -63,17 +63,19 @@ services:
       - .:/app
 
   nginx:
-    build:
-      context: ./nginx
+    image: nginx:alpine
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - web
     volumes:
-      - static_volume:/vol/static
-      - media_volume:/vol/media
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/vol/static/
+      - media_volume:/vol/media/
 
 volumes:
   postgres_data:
+  redis_data:
   static_volume:
   media_volume:

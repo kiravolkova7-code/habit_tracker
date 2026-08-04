@@ -62,23 +62,25 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/educational_platform_work:${{ github.sha }}
+          platforms: linux/amd64
 
       - name: Update Server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_IP }}
           username: deployer
-          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
             cd /home/deployer/habit_tracker
-            
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}
-            
-            docker compose down
+
             export IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}"
             docker pull "$IMAGE_TAG"
-            IMAGE_TAG="$IMAGE_TAG" docker compose up -d --remove-orphans
+
+            docker compose down
+            IMAGE_TAG="$IMAGE_TAG" docker compose up -d --remove-orphans --pull always
+
             docker compose exec -T web python manage.py migrate --noinput
             docker compose exec -T web python manage.py collectstatic --noinput
