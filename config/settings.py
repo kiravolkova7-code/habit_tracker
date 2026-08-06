@@ -64,9 +64,16 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
+database_url = os.getenv("DATABASE_URL")
+if not database_url:
+    raise ValueError(
+        "Переменная окружения DATABASE_URL не задана. "
+        "Проверьте наличие .env файла и его монтирование в docker-compose.yml"
+)
+
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL"),
+        default=database_url,
         conn_max_age=600,
     )
 }
