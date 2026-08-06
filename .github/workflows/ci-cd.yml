@@ -73,7 +73,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-            cd /home/deployer/habit_tracker
+            cd /home/kira_volkova_7/habit_tracker
             git pull origin main || true
             export IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}"
             docker pull "$IMAGE_TAG"
