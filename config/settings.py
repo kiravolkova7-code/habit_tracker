@@ -119,7 +119,7 @@ LOCALE_PATHS = [
 ]
 
 STATIC_URL = "/static/"
-STATIC_ROOT = "/vol/web/static/"
+STATIC_ROOT = BASE_DIR / 'vol/web/static'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
