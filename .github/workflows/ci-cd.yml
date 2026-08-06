@@ -74,7 +74,7 @@ jobs:
           script: |
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             cd /home/deployer/habit_tracker
-            git pull origin main || true
+            git pull origin develop || true
             export IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}"
             docker pull "$IMAGE_TAG"
             docker compose down
@@ -82,3 +82,5 @@ jobs:
             sleep 10
             docker compose exec -T web python manage.py migrate --noinput
             docker compose exec -T web python manage.py collectstatic --noinput
+            
+            
