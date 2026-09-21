@@ -1,0 +1,86 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-and-lint:
+    runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      CELERY_BROKER_URL: ${{ secrets.CELERY_BROKER_URL }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14.3"
+
+      - name: Install all project dependencies and test tools
+        run: |
+          pip install -r requirements.txt 
+
+          pip install --upgrade pip && \
+            pip install flake8 pytest-django django-stubs coverage dj-database-url
+
+      - name: Run tests
+        env:
+          DATABASE_URL: sqlite://db.sqlite3
+          SECRET_KEY: test-key-for-ci
+        run: |
+          coverage run manage.py test
+          coverage report --fail-under=70 
+
+      - name: Run linter
+        run: |
+          flake8 .
+
+  build-and-deploy:
+    needs: test-and-lint
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}
+          platforms: linux/amd64
+
+      - name: Update Server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: kira_volkova_7
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+            cd /home/kira_volkova_7/habit_tracker
+            git pull origin main || true
+            export IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/habit_tracker:${{ github.sha }}"
+            docker pull "$IMAGE_TAG"
+            docker compose down
+            IMAGE_TAG="$IMAGE_TAG" docker compose up -d --remove-orphans
+            sleep 10
+            docker compose exec -T web python manage.py migrate --noinput
+            docker compose exec -T web python manage.py collectstatic --noinput
+            
+            

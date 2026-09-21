@@ -1,0 +1,66 @@
+# Исключаем саму папку виртуального окружения (как бы она ни называлась)
+env/
+venv/
+ENV/
+VENV/
+.venv/
+.virtualenv/
+
+# Исключаем временные файлы Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdvar/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Исключаем базы данных (если используется SQLite)
+*.sqlite3
+*.db
+
+# Исключаем логи
+*.log
+
+# Исключаем медиафайлы и статику, собранные локально
+staticfiles/
+static/
+media/
+
+# Исключаем переменные окружения с секретами
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Исключаем настройки IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Исключаем служебные файлы OS
+Thumbs.db
+Desktop.ini
+
+# Исключаем кэш pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Исключаем кеш pytest
+.pytest_cache/
+.cache/
